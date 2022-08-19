@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lesson06networkoperationsexercices.databinding.ActivityMainBinding
@@ -26,12 +27,33 @@ class MainActivity : AppCompatActivity() {
 
             button.setOnClickListener {
                 items.add("Item ${items.size}")
-                adapter.setData(items)
+                adapter.setNewList(items)
                 adapter.notifyDataSetChanged()
             }
             recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
             recyclerView.adapter = adapter
         }
+    }
+}
+
+class ItemDiffCallback(
+    private val oldItems: List<String>,
+    private val newItems: List<String>
+) : DiffUtil.Callback() {
+    override fun getOldListSize(): Int {
+        return oldItems.size
+    }
+
+    override fun getNewListSize(): Int {
+        return newItems.size
+    }
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldItems[oldItemPosition] == newItems[newItemPosition]
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldItems[oldItemPosition] == newItems[newItemPosition]
     }
 }
 
@@ -67,8 +89,11 @@ class ItemAdapter(
 
     override fun getItemCount(): Int = list.size
 
-    fun setData(data: List<String>) {
+    fun setNewList(newList: List<String>) {
+
+        val callback = ItemDiffCallback(list.toList(), newList)
         list.clear()
-        list.addAll(data)
+        list.addAll(newList)
+        DiffUtil.calculateDiff(callback).dispatchUpdatesTo(this)
     }
 }
