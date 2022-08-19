@@ -17,12 +17,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val items = mutableListOf<String>()
-        val adapter = ItemAdapter(items)
+        val adapter = ItemAdapter()
 
         with(binding) {
 
             button.setOnClickListener {
                 items.add("Item ${items.size}")
+                adapter.setData(items)
                 adapter.notifyDataSetChanged()
             }
             recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
@@ -37,7 +38,10 @@ class ItemViewHolder(private val binding: ItemBinding) : RecyclerView.ViewHolder
     }
 }
 
-class ItemAdapter(private val list: List<String>) : RecyclerView.Adapter<ItemViewHolder>() {
+class ItemAdapter : RecyclerView.Adapter<ItemViewHolder>() {
+
+    private val list = mutableListOf<String>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val context = parent.context
         val layoutInflater = LayoutInflater.from(context)
@@ -51,4 +55,9 @@ class ItemAdapter(private val list: List<String>) : RecyclerView.Adapter<ItemVie
     }
 
     override fun getItemCount(): Int = list.size
+
+    fun setData(data: List<String>) {
+        list.clear()
+        list.addAll(data)
+    }
 }
