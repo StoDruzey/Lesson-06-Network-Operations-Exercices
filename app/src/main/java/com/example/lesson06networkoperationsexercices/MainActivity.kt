@@ -16,13 +16,17 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater, null, false)
         setContentView(binding.root)
 
-        val items = List(20) {
-            "item $it"
-        }
+        val items = mutableListOf<String>()
+        val adapter = ItemAdapter(items)
 
         with(binding) {
+
+            button.setOnClickListener {
+                items.add("Item ${items.size}")
+                adapter.notifyDataSetChanged()
+            }
             recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
-            recyclerView.adapter = ItemAdapter(items)
+            recyclerView.adapter = adapter
         }
     }
 }
