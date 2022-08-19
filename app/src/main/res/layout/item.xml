@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp"
+    android:foreground="?selectableItemBackground"
+    android:background="@color/teal_200"
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
@@ -12,6 +14,6 @@
         android:layout_gravity="center"
         android:textSize="30sp"
         android:textColor="@color/purple_200"
-        tools:text="some text"/>
+        tools:text="@tools:sample/cities"/>
 
 </FrameLayout>
