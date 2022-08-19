@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lesson06networkoperationsexercices.databinding.ActivityMainBinding
@@ -17,7 +18,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val items = mutableListOf<String>()
-        val adapter = ItemAdapter()
+        val adapter = ItemAdapter { item ->
+            Toast.makeText(this, item, Toast.LENGTH_SHORT).show()
+        }
 
         with(binding) {
 
@@ -32,13 +35,21 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-class ItemViewHolder(private val binding: ItemBinding) : RecyclerView.ViewHolder(binding.root) {
+class ItemViewHolder(
+    private val binding: ItemBinding,
+    private val onItemClicked: (String) -> Unit
+) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: String) {
         binding.textView.text = item
+        binding.root.setOnClickListener {
+            onItemClicked(item)
+        }
     }
 }
 
-class ItemAdapter : RecyclerView.Adapter<ItemViewHolder>() {
+class ItemAdapter(
+    private val onItemClicked: (String) -> Unit
+) : RecyclerView.Adapter<ItemViewHolder>() {
 
     private val list = mutableListOf<String>()
 
@@ -46,7 +57,7 @@ class ItemAdapter : RecyclerView.Adapter<ItemViewHolder>() {
         val context = parent.context
         val layoutInflater = LayoutInflater.from(context)
         val binding = ItemBinding.inflate(layoutInflater, parent, false)
-        return ItemViewHolder(binding)
+        return ItemViewHolder(binding, onItemClicked)
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
